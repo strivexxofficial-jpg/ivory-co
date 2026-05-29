@@ -1,1 +1,186 @@
-import React, { useState, useEffect } from 'react'; import emailjs from '@emailjs/browser'; import { motion, AnimatePresence } from 'motion/react'; import { X, BookOpen, Check } from 'lucide-react'; export default function LeadMagnet() { const [isVisible, setIsVisible] = useState(false); const [isDismissed, setIsDismissed] = useState(false); const [email, setEmail] = useState(''); const [submitted, setSubmitted] = useState(false); const [canShow, setCanShow] = useState(false); const [loading, setLoading] = useState(false); const [error, setError] = useState(false); useEffect(() => { const scrollDelay = setTimeout(() => { setCanShow(true); }, 5000); return () => clearTimeout(scrollDelay); }, []); useEffect(() => { const handleScroll = () => { if ( canShow && window.scrollY > window.innerHeight * 3.5 && !isDismissed && !submitted ) { setIsVisible(true); } }; window.addEventListener('scroll', handleScroll, { passive: true, }); return () => { window.removeEventListener('scroll', handleScroll); }; }, [isDismissed, submitted, canShow]); const handleSubmit = async ( e?: React.FormEvent ) => { if (e && e.preventDefault) e.preventDefault(); if (!email || !email.includes('@')) return; setLoading(true); try { await emailjs.send( 'service_7v5k4zg', 'template_qneedoa', { to_email: email, to_name: 'Future Patient', guide_link: 'https://ivory-co-elite-dental-studio.vercel.app/guide-veneers.html', booking_link: 'https://ivory-co-elite-dental-studio.vercel.app/#booking', from_name: 'Ivory & Co. Elite Dental Studio', }, 'tSqSrskIk2nH58LJf' ); setSubmitted(true); setTimeout(() => { setIsVisible(false); }, 3000); } catch (err) { console.error('EmailJS error:', err); setError(true); } finally { setLoading(false); } }; const handleDismiss = () => { setIsVisible(false); setIsDismissed(true); }; return ( <AnimatePresence> {isVisible && ( <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 50 }} transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], }} className="fixed bottom-4 left-1/2 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 overflow-hidden rounded-2xl bg-white shadow-2xl md:bottom-6" > <button onClick={handleDismiss} className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-stone/50 text-sage transition-colors hover:bg-stone" > <X className="h-4 w-4" /> </button> <div className="relative p-6"> <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-clay/10 text-clay"> <BookOpen className="h-6 w-6" /> </div> {!submitted ? ( <div className="space-y-3"> <h4 className="h5 leading-tight text-clay"> The Modern Guide to Esthetic Veneers </h4> <p className="text-balance text-xs font-light leading-relaxed text-sage/80"> Understand the materials and timeline. Enter your email for the free PDF guide. </p> <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-2" > <input type="email" value={email} onChange={(e) => setEmail(e.target.value) } placeholder="Your email address" required className="w-full rounded-lg border border-transparent bg-stone px-3 py-2.5 text-xs font-medium transition-all focus:border-clay/30 focus:outline-none focus:ring-1 focus:ring-clay/30" /> <button type="submit" disabled={loading || submitted} className="flex w-full items-center justify-center gap-2 rounded-lg bg-clay px-3 py-2.5 text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:bg-sage" > {loading ? 'Sending...' : submitted ? 'Guide Sent ✓' : error ? 'Try Again' : 'Download Free Guide'} </button> {error && ( <p className="mt-2 text-center text-[11px] text-red-500"> Something went wrong. Please try again. </p> )} </form> </div> ) : ( <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-4 text-center" > <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-sage/10 text-sage"> <Check className="h-5 w-5" /> </div> <h4 className="h5 mb-2 text-clay"> Sent via Email </h4> <p className="text-balance text-xs font-light text-sage/80"> Check your inbox shortly for the guide. </p> </motion.div> )} </div> </motion.div> )} </AnimatePresence> ); }
+
+import React, { useState, useEffect } from 'react';
+import emailjs from '@emailjs/browser';
+import { motion, AnimatePresence } from 'motion/react';
+import { X, BookOpen, Check } from 'lucide-react';
+
+export default function LeadMagnet() {
+  const [isVisible, setIsVisible] = useState(false);
+  const [isDismissed, setIsDismissed] = useState(false);
+  const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [canShow, setCanShow] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const scrollDelay = setTimeout(() => {
+      setCanShow(true);
+    }, 5000);
+
+    return () => clearTimeout(scrollDelay);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        canShow &&
+        window.scrollY > window.innerHeight * 3.5 &&
+        !isDismissed &&
+        !submitted
+      ) {
+        setIsVisible(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, {
+      passive: true,
+    });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [isDismissed, submitted, canShow]);
+
+  const handleSubmit = async (
+    e?: React.FormEvent
+  ) => {
+    if (e && e.preventDefault) e.preventDefault();
+
+    if (!email || !email.includes('@')) return;
+
+    setLoading(true);
+
+    try {
+      await emailjs.send(
+        'service_7v5k4zg',
+        'template_qneedoa',
+        {
+          to_email: email,
+          to_name: 'Future Patient',
+          guide_link:
+            'https://ivory-co-elite-dental-studio.vercel.app/guide-veneers.html',
+          booking_link:
+            'https://ivory-co-elite-dental-studio.vercel.app/#booking',
+          from_name:
+            'Ivory & Co. Elite Dental Studio',
+        },
+        'tSqSrskIk2nH58LJf'
+      );
+
+      setSubmitted(true);
+
+      setTimeout(() => {
+        setIsVisible(false);
+      }, 3000);
+    } catch (err) {
+      console.error('EmailJS error:', err);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDismiss = () => {
+    setIsVisible(false);
+    setIsDismissed(true);
+  };
+
+  return (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 50 }}
+          transition={{
+            duration: 0.6,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          className="fixed bottom-4 left-1/2 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 overflow-hidden rounded-2xl bg-white shadow-2xl md:bottom-6"
+        >
+          <button
+            onClick={handleDismiss}
+            className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-stone/50 text-sage transition-colors hover:bg-stone"
+          >
+            <X className="h-4 w-4" />
+          </button>
+
+          <div className="relative p-6">
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-clay/10 text-clay">
+              <BookOpen className="h-6 w-6" />
+            </div>
+
+            {!submitted ? (
+              <div className="space-y-3">
+                <h4 className="h5 leading-tight text-clay">
+                  The Modern Guide to Esthetic Veneers
+                </h4>
+
+                <p className="text-balance text-xs font-light leading-relaxed text-sage/80">
+                  Understand the materials and timeline.
+                  Enter your email for the free PDF guide.
+                </p>
+
+                <form
+                  onSubmit={handleSubmit}
+                  className="mt-4 flex flex-col gap-2"
+                >
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) =>
+                      setEmail(e.target.value)
+                    }
+                    placeholder="Your email address"
+                    required
+                    className="w-full rounded-lg border border-transparent bg-stone px-3 py-2.5 text-xs font-medium transition-all focus:border-clay/30 focus:outline-none focus:ring-1 focus:ring-clay/30"
+                  />
+
+                  <button
+                    type="submit"
+                    disabled={loading || submitted}
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-clay px-3 py-2.5 text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:bg-sage"
+                  >
+                    {loading
+                      ? 'Sending...'
+                      : submitted
+                      ? 'Guide Sent ✓'
+                      : error
+                      ? 'Try Again'
+                      : 'Download Free Guide'}
+                  </button>
+
+                  {error && (
+                    <p className="mt-2 text-center text-[11px] text-red-500">
+                      Something went wrong. Please try again.
+                    </p>
+                  )}
+                </form>
+              </div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="py-4 text-center"
+              >
+                <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-sage/10 text-sage">
+                  <Check className="h-5 w-5" />
+                </div>
+
+                <h4 className="h5 mb-2 text-clay">
+                  Sent via Email
+                </h4>
+
+                <p className="text-balance text-xs font-light text-sage/80">
+                  Check your inbox shortly for the guide.
+                </p>
+              </motion.div>
+            )}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
