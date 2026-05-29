@@ -1,4 +1,4 @@
-```ts
+
 import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({
@@ -42,4 +42,4 @@ Rules:
 
   return response.text;
 }
-```
+
