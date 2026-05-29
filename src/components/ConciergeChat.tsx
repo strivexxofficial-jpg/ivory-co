@@ -1,16 +1,15 @@
 ```tsx
-import { useState } from 'react';
+import { useState } from "react";
 
 export default function ConciergeChat() {
   const [messages, setMessages] = useState([
     {
-      role: 'assistant',
-      content:
-        'Welcome to Ivory & Co. How can we help you today?',
+      role: "assistant",
+      content: "Welcome to Ivory & Co. How can we help you today?",
     },
   ]);
 
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const sendMessage = async () => {
@@ -21,19 +20,19 @@ export default function ConciergeChat() {
     setMessages((prev) => [
       ...prev,
       {
-        role: 'user',
+        role: "user",
         content: userMessage,
       },
     ]);
 
-    setInput('');
+    setInput("");
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
+      const response = await fetch("/api/chat", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           message: userMessage,
@@ -45,10 +44,10 @@ export default function ConciergeChat() {
       setMessages((prev) => [
         ...prev,
         {
-          role: 'assistant',
+          role: "assistant",
           content:
             data.reply ||
-            'Please fill the booking form and our team will assist you shortly.',
+            "Please fill the booking form and our team will assist you shortly.",
         },
       ]);
     } catch (error) {
@@ -57,9 +56,9 @@ export default function ConciergeChat() {
       setMessages((prev) => [
         ...prev,
         {
-          role: 'assistant',
+          role: "assistant",
           content:
-            'Something went wrong. Please use the booking form below.',
+            "Something went wrong. Please use the booking form below.",
         },
       ]);
     } finally {
@@ -77,11 +76,11 @@ export default function ConciergeChat() {
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`mb-3 rounded-xl p-3 text-sm ${
-              msg.role === 'user'
-                ? 'bg-[#C8986A] text-white'
-                : 'bg-[#222] text-gray-200'
-            }`}
+            className={
+              msg.role === "user"
+                ? "mb-3 rounded-xl bg-[#C8986A] p-3 text-sm text-white"
+                : "mb-3 rounded-xl bg-[#222] p-3 text-sm text-gray-200"
+            }
           >
             {msg.content}
           </div>
