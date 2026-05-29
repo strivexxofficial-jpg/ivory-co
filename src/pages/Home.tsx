@@ -100,16 +100,14 @@ export default function Home() {
             }}
             className="absolute right-0 top-0 w-full lg:w-[70%] h-[115%] z-0 origin-center lg:origin-right translate-x-4 lg:translate-x-12"
           >
-            <img 
-              src="https://i.ibb.co/ZppKLXWr/wmremove-transformed.png" 
-              alt="Luxury dental clinic interior"
-
-object-cover object-[70%_center] lg:object-center opacity-85
-
-              referrerPolicy="no-referrer"
-              loading="eager"
-              fetchPriority="high"
-            />
+        <img 
+  src="https://i.ibb.co/ZppKLXWr/wmremove-transformed.png" 
+  alt="Luxury dental clinic interior"
+  className="w-full h-full object-cover object-[70%_center] lg:object-center opacity-85"
+  referrerPolicy="no-referrer"
+  loading="eager"
+  fetchPriority="high"
+/>
             {/* Cinematic grain overlay */}
             <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')]"></div>
           </motion.div>
@@ -334,7 +332,7 @@ object-cover object-[70%_center] lg:object-center opacity-85
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="group cursor-pointer">
                   <div className="relative aspect-video rounded-[2rem] overflow-hidden bg-stone-dark mb-6 border border-white/10">
                     <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80" alt="Patient Video Review" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                    <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors duration-500"></div>
+                    <div className="absolute inset-0 bg-black/15 group-hover:bg-black/30 transition-colors duration-500"></div>
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/40 group-hover:bg-clay group-hover:border-clay transition-all duration-500 scale-90 group-hover:scale-100">
                         <Play className="w-6 h-6 text-white ml-1 fill-white" />
@@ -353,7 +351,7 @@ object-cover object-[70%_center] lg:object-center opacity-85
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="group cursor-pointer">
                   <div className="relative aspect-video rounded-[2rem] overflow-hidden bg-stone-dark mb-6 border border-white/10">
                     <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80" alt="Patient Video Review" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                    <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors duration-500"></div>
+                    <div className="absolute inset-0 bg-black/15 group-hover:bg-black/30 transition-colors duration-500"></div>
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/40 group-hover:bg-clay group-hover:border-clay transition-all duration-500 scale-90 group-hover:scale-100">
                         <Play className="w-6 h-6 text-white ml-1 fill-white" />
@@ -550,7 +548,7 @@ object-cover object-[70%_center] lg:object-center opacity-85
                width="1200"
                height="800"
              />
-             <div className="absolute inset-0 bg-sage/95"></div>
+             <div className="absolute inset-0 bg-sage/75"></div>
           </motion.div>
           
           <div className="relative z-10 max-w-[1400px] mx-auto px-6 text-center text-ivory">
