@@ -1,3 +1,6 @@
+```ts
+import { generateChatResponse } from "./api/chat";
+```
 import express from "express";
 import { createServer as createViteServer } from "vite";
 import path from "path";
