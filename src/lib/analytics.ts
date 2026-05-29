@@ -4,7 +4,7 @@ export const trackCTAClick = (ctaName: string) => {
   }
 };
 
-export const trackFormStart = () => 
+export const trackFormStart = () => {
   if (typeof window !== 'undefined' && (window as any).gtag) {
     (window as any).gtag('event', 'form_start');
   }
