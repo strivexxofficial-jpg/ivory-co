@@ -100,7 +100,7 @@ export default function Home() {
             }}
             className="absolute right-0 top-0 w-full lg:w-[70%] h-[115%] z-0 origin-center lg:origin-right translate-x-4 lg:translate-x-12"
           >
-        <img 
+  <img 
   src="https://i.ibb.co/ZppKLXWr/wmremove-transformed.png" 
   alt="Luxury dental clinic interior"
   className="w-full h-full object-cover object-[70%_center] lg:object-center opacity-85"
