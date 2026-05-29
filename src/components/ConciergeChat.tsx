@@ -1,7 +1,7 @@
-```tsx
-import { useState } from "react";
+```tsx id="i6d0op"
+import React, { useState } from "react";
 
-export default function ConciergeChat() {
+const ConciergeChat = () => {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
@@ -110,5 +110,7 @@ export default function ConciergeChat() {
       </div>
     </div>
   );
-}
+};
+
+export default ConciergeChat;
 ```
