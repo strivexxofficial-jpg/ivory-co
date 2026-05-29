@@ -103,7 +103,9 @@ export default function Home() {
             <img 
               src="https://i.ibb.co/ZppKLXWr/wmremove-transformed.png" 
               alt="Luxury dental clinic interior"
-              className="w-full h-full object-cover object-center lg:object-right opacity-85"
+
+object-cover object-[70%_center] lg:object-center opacity-85
+
               referrerPolicy="no-referrer"
               loading="eager"
               fetchPriority="high"
