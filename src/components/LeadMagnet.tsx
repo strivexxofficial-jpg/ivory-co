@@ -23,7 +23,7 @@ export default function LeadMagnet() {
   useEffect(() => {
     const handleScroll = () => {
       // Only show after scrolling down 2 viewport heights (past hero and intro)
-      if (canShow && window.scrollY > window.innerHeight * 2.0 && !isDismissed && !submitted) {
+      if (canShow && window.scrollY > window.innerHeight * 3.5 && !isDismissed && !submitted) {
         setIsVisible(true);
       }
     };
