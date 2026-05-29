@@ -1,11 +1,12 @@
-```tsx id="i6d0op"
+```tsx
 import React, { useState } from "react";
 
 const ConciergeChat = () => {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      content: "Welcome to Ivory & Co. How can we help you today?",
+      content:
+        "Welcome to Ivory & Co. How can we assist you today?",
     },
   ]);
 
@@ -47,7 +48,7 @@ const ConciergeChat = () => {
           role: "assistant",
           content:
             data.reply ||
-            "Please fill the booking form and our team will assist you shortly.",
+            "Please book a consultation for personalized assistance.",
         },
       ]);
     } catch (error) {
@@ -67,7 +68,7 @@ const ConciergeChat = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 w-[350px] rounded-2xl border border-white/10 bg-[#111] p-4 shadow-2xl">
+    <div className="fixed bottom-24 right-6 z-[60] w-[350px] rounded-2xl border border-white/10 bg-[#111] p-4 shadow-2xl max-sm:w-[calc(100%-2rem)]">
       <div className="mb-4 text-lg font-semibold text-white">
         AI Concierge
       </div>
@@ -97,6 +98,7 @@ const ConciergeChat = () => {
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           placeholder="Ask anything..."
           className="flex-1 rounded-xl border border-white/10 bg-[#1a1a1a] px-3 py-2 text-sm text-white outline-none"
         />
