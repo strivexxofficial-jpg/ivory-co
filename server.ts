@@ -1,48 +1,88 @@
-import { generateChatResponse } from "./api/chat";
+
 import express from "express";
 import { createServer as createViteServer } from "vite";
 import path from "path";
 
-
 async function startServer() {
   const app = express();
+
   const PORT = process.env.PORT || 3000;
 
   app.use(express.json({ limit: "50mb" }));
 
- 
-  app.post("/api/smile-sim-process", async (req, res) => {
+  app.post("/api/chat", async (req, res) => {
     try {
-      res.json({ message: "Pipeline initiated" });
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      const { generateChatResponse } = await import("./api/chat");
+
+      const body =
+        typeof req.body === "string"
+          ? JSON.parse(req.body)
+          : req.body;
+
+      const { message } = body;
+
+      const reply = await generateChatResponse(message);
+
+      res.status(200).json({
+        reply,
+      });
+    } catch (error) {
+      console.error(error);
+
+      res.status(500).json({
+        reply: "Something went wrong.",
+      });
     }
   });
 
-  async function uploadToImgBB(base64Data: string): Promise<string> {
+  app.post("/api/smile-sim-process", async (req, res) => {
+    try {
+      res.json({
+        message: "Pipeline initiated",
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  });
+
+  async function uploadToImgBB(
+    base64Data: string
+  ): Promise<string> {
     const base64Clean = base64Data.includes(",")
       ? base64Data.split(",")[1]
       : base64Data;
 
     const formData = new URLSearchParams();
 
-    formData.append("key", process.env.IMGBB_KEY || "");
+    formData.append(
+      "key",
+      process.env.IMGBB_KEY || ""
+    );
+
     formData.append("image", base64Clean);
+
     formData.append("expiration", "600");
 
-    const res = await fetch("https://api.imgbb.com/1/upload", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: formData.toString(),
-    });
+    const res = await fetch(
+      "https://api.imgbb.com/1/upload",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            "application/x-www-form-urlencoded",
+        },
+        body: formData.toString(),
+      }
+    );
 
     const data = await res.json();
 
     if (!data.success) {
       throw new Error(
-        "ImgBB upload failed: " + JSON.stringify(data)
+        "ImgBB upload failed: " +
+          JSON.stringify(data)
       );
     }
 
@@ -53,9 +93,13 @@ async function startServer() {
     try {
       const { imageUrl } = req.body;
 
-      const hostedImageUrl = await uploadToImgBB(imageUrl);
+      const hostedImageUrl =
+        await uploadToImgBB(imageUrl);
 
-      console.log("IMGBB IMAGE URL:", hostedImageUrl);
+      console.log(
+        "IMGBB IMAGE URL:",
+        hostedImageUrl
+      );
 
       const response = await fetch(
         "https://gateway.pixazo.ai/inpainting/v1/getImage",
@@ -84,23 +128,32 @@ async function startServer() {
 
       const text = await response.text();
 
-      console.log("PIXAZO RAW RESPONSE:", text);
+      console.log(
+        "PIXAZO RAW RESPONSE:",
+        text
+      );
 
       let data;
 
       try {
         data = JSON.parse(text);
       } catch (e) {
-        return res.status(response.status).send(text);
+        return res
+          .status(response.status)
+          .send(text);
       }
 
       if (!response.ok) {
-        return res.status(response.status).json(data);
+        return res
+          .status(response.status)
+          .json(data);
       }
 
       res.json(data);
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({
+        error: error.message,
+      });
     }
   });
 
@@ -126,12 +179,18 @@ async function startServer() {
       try {
         data = JSON.parse(text);
       } catch (e) {
-        return res.status(response.status).send(text);
+        return res
+          .status(response.status)
+          .send(text);
       }
 
-      res.status(response.status).json(data);
+      res
+        .status(response.status)
+        .json(data);
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({
+        error: error.message,
+      });
     }
   });
 
@@ -145,17 +204,25 @@ async function startServer() {
 
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(process.cwd(), "dist");
+    const distPath = path.join(
+      process.cwd(),
+      "dist"
+    );
 
     app.use(express.static(distPath));
 
-app.get("*", (req: any, res: any) => {
-  res.sendFile(path.join(distPath, "index.html"));
-});
+    app.get("*", (req: any, res: any) => {
+      res.sendFile(
+        path.join(distPath, "index.html")
+      );
+    });
+  }
 
- app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(
+      `Server running on port ${PORT}`
+    );
+  });
 }
 
 startServer();
