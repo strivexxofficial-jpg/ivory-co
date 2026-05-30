@@ -1,25 +1,26 @@
-import { GoogleGenAI } from "@google/genai";
-
 export async function generateChatResponse(message: string): Promise<string> {
-  const ai = new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY || "",
+  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        {
+          role: "system",
+          content: `You are the AI concierge for Ivory & Co. Elite Dental Studio. Only answer questions about dental care, cosmetic dentistry, veneers, implants, whitening, Invisalign, pricing, and bookings. Be concise, warm, and premium-sounding. Always encourage booking a consultation.`
+        },
+        {
+          role: "user",
+          content: message
+        }
+      ],
+      max_tokens: 300,
+    }),
   });
 
-  const response = await ai.models.generateContent({
-    model: "gemini-2.0-flash",
-    contents: `
-You are the AI concierge for Ivory & Co. Elite Dental Studio.
-
-Rules:
-- Only answer questions related to dental care, cosmetic dentistry, bookings, veneers, implants, whitening, Invisalign, pricing, consultations, and oral health.
-- Keep responses concise and premium sounding.
-- Always encourage booking a consultation.
-- Never answer unrelated topics.
-
-User:
-${message}
-`,
-  });
-
-  return response.text || "Please book a consultation for personalized assistance.";
+  const data = await response.json();
+  return data.choices?.[0]?.message?.content || "Please book a consultation for personalized assistance.";
 }
