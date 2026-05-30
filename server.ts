@@ -1,4 +1,4 @@
-```ts
+
 import { generateChatResponse } from "./api/chat";
 import express from "express";
 import { createServer as createViteServer } from "vite";
@@ -11,24 +11,7 @@ async function startServer() {
 
   app.use(express.json({ limit: "50mb" }));
 
-  app.post("/api/chat", async (req, res) => {
-    try {
-      const { message } = req.body;
-
-      const reply = await generateChatResponse(message);
-
-      res.status(200).json({
-        reply,
-      });
-    } catch (error) {
-      console.error(error);
-
-      res.status(500).json({
-        reply: "Something went wrong.",
-      });
-    }
-  });
-
+ 
   app.post("/api/smile-sim-process", async (req, res) => {
     try {
       res.json({ message: "Pipeline initiated" });
@@ -178,4 +161,4 @@ async function startServer() {
 }
 
 startServer();
-```
+
