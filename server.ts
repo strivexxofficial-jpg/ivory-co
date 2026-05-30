@@ -153,9 +153,9 @@ app.get("*", (req: any, res: any) => {
   res.sendFile(path.join(distPath, "index.html"));
 });
 
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
+ app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
 }
 
 startServer();
