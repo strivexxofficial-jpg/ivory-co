@@ -92,30 +92,31 @@ export default function Home() {
         <section ref={heroRef} className="relative w-full h-[85svh] md:h-screen min-h-[600px] overflow-hidden bg-[#181615] flex flex-col justify-center pt-[100px] pb-16 lg:pt-[120px]">
           
           {/* Background & Image */}
-          <motion.div 
-            style={{ 
-              y: heroScrollY,
-              scale: heroScale,
-              opacity: heroScrollOpacity
-            }}
-            className="absolute right-0 top-0 w-full lg:w-[70%] h-[115%] z-0 origin-center lg:origin-right translate-x-4 lg:translate-x-12"
-          >
-  <img 
-  src="https://i.ibb.co/ZppKLXWr/wmremove-transformed.png" 
-  alt="Luxury dental clinic interior"
-  className="w-full h-full object-cover object-[70%_center] lg:object-center opacity-85"
-  referrerPolicy="no-referrer"
-  loading="eager"
-  fetchPriority="high"
-/>
-            {/* Cinematic grain overlay */}
-            <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')]"></div>
-          </motion.div>
+ <motion.div
+  style={{
+    y: heroScrollY,
+    scale: heroScale,
+    opacity: heroScrollOpacity,
+  }}
+  className="absolute inset-0 z-0 overflow-hidden"
+>
+  <img
+    src="https://i.ibb.co/ZppKLXWr/wmremove-transformed.png"
+    alt="Luxury dental clinic interior"
+className="w-full h-full object-cover object-[78%_center]"
+    referrerPolicy="no-referrer"
+    loading="eager"
+    fetchPriority="high"
+  />
+
+  <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')]"></div>
+</motion.div>
+          {/* Hero image fallback tint */}
+<div className="absolute inset-0 bg-black/20 z-[1]" />
 
           {/* Cinematic gradient overlay for contrast architecture */}
           <div className="absolute inset-0 z-10 w-full lg:w-[85%]" style={{
-            background: 'linear-gradient(90deg, rgba(8,8,8,0.58) 0%, rgba(8,8,8,0.38) 28%, rgba(8,8,8,0.14) 52%, rgba(8,8,8,0.02) 72%, transparent 100%)'
-          }} />
+background: 'linear-gradient(90deg, rgba(8,8,8,0.72) 0%, rgba(8,8,8,0.52) 22%, rgba(8,8,8,0.18) 48%, rgba(8,8,8,0.04) 70%, transparent 100%)'          }} />
           <div className="absolute inset-0 bg-black/10 z-10" />
 
           {/* Aesthetic geometric framing lines */}
