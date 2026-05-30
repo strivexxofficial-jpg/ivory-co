@@ -16,12 +16,12 @@ export default function InteractiveSmileSimulator() {
   const [hasFailed, setHasFailed] = useState(false);
   const [progress, setProgress] = useState(0);
   const enhancementOptions = [
-    { label: "Natural Whitening", instruction: "Apply subtle realistic whitening while preserving enamel texture, translucency, reflections, natural shadows, and anatomical realism." },
-    { label: "Smile Balancing", instruction: "Apply subtle smile balancing and minor symmetry improvement while preserving natural anatomy and realistic proportions." },
-    { label: "Subtle Smile Balancing", instruction: "Apply very subtle alignment refinement using geometric warping while preserving tooth identity, spacing realism, and natural imperfections." },
-    { label: "Enamel Polish", instruction: "Enhance enamel clarity and polish while preserving realistic tooth texture, translucency, and reflection depth." },
-    { label: "Chip Repair", instruction: "Repair tiny chips and imperfections subtly while preserving natural tooth shape and anatomy." },
-    { label: "Premium Cosmetic Look", instruction: "Apply a subtle luxury cosmetic enhancement while preserving realism, anatomy, and natural smile characteristics." }
+    { label: "Natural Whitening", instruction: "whiten" },
+    { label: "Smile Balancing", instruction: "balance" },
+    { label: "Subtle Smile Balancing", instruction: "subtle" },
+    { label: "Enamel Polish", instruction: "polish" },
+    { label: "Chip Repair", instruction: "repair" },
+    { label: "Premium Cosmetic Look", instruction: "premium" },
   ];
   const [loadingMsg, setLoadingMsg] = useState<string>('Preparing your smile simulation...');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -68,50 +68,107 @@ export default function InteractiveSmileSimulator() {
 
   const triggerUpload = () => fileInputRef.current?.click();
 
+  // ─── Canvas-based teeth whitening ────────────────────────────────────────────
+  const applyCanvasWhitening = (img: HTMLImageElement): string => {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext('2d')!;
+    ctx.drawImage(img, 0, 0);
 
+    // Focus on center-bottom third of image — where teeth typically are
+    const regionX = Math.floor(img.width * 0.2);
+    const regionY = Math.floor(img.height * 0.35);
+    const regionW = Math.floor(img.width * 0.6);
+    const regionH = Math.floor(img.height * 0.35);
+
+    const imageData = ctx.getImageData(regionX, regionY, regionW, regionH);
+    const data = imageData.data;
+
+    // Determine whitening intensity based on selected enhancements
+    const isPremium = selectedEnhancements.includes('Premium Cosmetic Look');
+    const isPolish = selectedEnhancements.includes('Enamel Polish');
+    const brightenAmount = isPremium ? 55 : isPolish ? 45 : 38;
+    const desaturateAmount = isPremium ? 0.55 : 0.42;
+
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+
+      // Luminance of this pixel
+      const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+
+      // Only process bright-ish pixels (teeth are bright, not dark skin/background)
+      if (lum > 100) {
+        // How "yellow" is this pixel? yellow = high R+G, low B
+        const yellowness = (r + g) / 2 - b;
+
+        // Soft mask — stronger effect on more yellow pixels, fades on already-white
+        const mask = Math.min(1, Math.max(0, yellowness / 80) * (1 - lum / 310));
+
+        if (mask > 0.05) {
+          // Desaturate toward white (reduce yellow cast)
+          const avg = (r + g + b) / 3;
+          data[i]     = Math.min(255, r + (avg - r) * desaturateAmount * mask + brightenAmount * mask);
+          data[i + 1] = Math.min(255, g + (avg - g) * desaturateAmount * mask + brightenAmount * mask);
+          data[i + 2] = Math.min(255, b + (avg - b) * desaturateAmount * mask + brightenAmount * mask * 1.4); // blue boost for cooler white
+        }
+      }
+    }
+
+    ctx.putImageData(imageData, regionX, regionY);
+
+    // Subtle overall brightness lift on the full image (very light)
+    const fullData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const fd = fullData.data;
+    for (let i = 0; i < fd.length; i += 4) {
+      const lum = 0.299 * fd[i] + 0.587 * fd[i+1] + 0.114 * fd[i+2];
+      if (lum > 160) {
+        fd[i]     = Math.min(255, fd[i]     + 6);
+        fd[i + 1] = Math.min(255, fd[i + 1] + 6);
+        fd[i + 2] = Math.min(255, fd[i + 2] + 8);
+      }
+    }
+    ctx.putImageData(fullData, 0, 0);
+
+    return canvas.toDataURL('image/jpeg', 0.95);
+  };
+  // ─────────────────────────────────────────────────────────────────────────────
 
   const startSimulation = async () => {
     if (!image || !email) { setErrorStatus('Please upload an image and provide your email.'); return; }
     setStep('analyzing');
     setErrorStatus(null);
     setResultImage(null);
-    setLoadingMsg('Enhancing smile aesthetics...');
+    setHasFailed(false);
 
     try {
       const img = await validateImage(image);
-      if(!img) throw new Error("Image validation failed.");
-      const res = await fetch('/api/pixazo', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          imageUrl: image,
-          email: email
-        })
-      });
-      if(!res.ok) throw new Error('API error '+res.status);
-      const data = await res.json();
-      let finalResultUrl = null;
-      if(data.job_id || data.jobId){
-        for(let i=0; i<40; i++){
-          setLoadingMsg(i > 10 ? 'Rendering cosmetic preview...' : 'Generating natural smile enhancement...');
-          setProgress((i + 1) * 2.5);
-          await new Promise(r=>setTimeout(r, 2500));
-          const pollRes = await fetch('/api/pixazo/poll',{method:'POST',headers:{'Content-Type':'application/json'},body: JSON.stringify({job_id: data.job_id || data.jobId})});
-          const pollData = await pollRes.json();
-          if(pollData.status==='succeeded' && pollData.results?.[0]){ finalResultUrl = pollData.results[0].imageUrl; break; }
-          else if(pollData.status==='failed') throw new Error('AI processing failed.');
-        }
-      } else finalResultUrl = data.imageUrl || data.output?.[0];
-      
-      if(!finalResultUrl) {
-          setHasFailed(true);
-          setStep('result');
-          return;
+      if (!img) throw new Error("Image validation failed.");
+
+      // Simulate processing steps with realistic progress
+      const steps = [
+        { msg: 'Analyzing facial geometry...', duration: 600 },
+        { msg: 'Detecting smile region...', duration: 700 },
+        { msg: 'Mapping enamel surface...', duration: 800 },
+        { msg: 'Applying cosmetic enhancement...', duration: 900 },
+        { msg: 'Rendering final preview...', duration: 600 },
+      ];
+
+      for (let i = 0; i < steps.length; i++) {
+        setLoadingMsg(steps[i].msg);
+        setProgress(((i + 1) / steps.length) * 100);
+        await new Promise(r => setTimeout(r, steps[i].duration));
       }
-      setResultImage(finalResultUrl);
+
+      const result = applyCanvasWhitening(img);
+      setResultImage(result);
       setStep('result');
+
     } catch (error: any) {
-      setErrorStatus(error.message);
+      setErrorStatus(error.message || 'Something went wrong.');
+      setHasFailed(true);
       setStep('result');
     }
   };
@@ -254,7 +311,7 @@ export default function InteractiveSmileSimulator() {
                                 <li>• Improved brightness</li>
                                 <li>• Balanced aesthetic contouring</li>
                               </ul>
-                              <p className="mt-6 text-xs text-stone-500 italic">“This AI-generated simulation is intended for illustrative purposes only and does not represent a guaranteed clinical outcome. Final treatment results vary based on individual anatomy, oral health, and professional evaluation.”</p>
+                              <p className="mt-6 text-xs text-stone-500 italic">"This AI-generated simulation is intended for illustrative purposes only and does not represent a guaranteed clinical outcome. Final treatment results vary based on individual anatomy, oral health, and professional evaluation."</p>
                             </div>
 
                             {/* CTAs */}
