@@ -6,7 +6,7 @@ export async function generateChatResponse(message: string): Promise<string> {
   });
 
   const response = await ai.models.generateContent({
-    model: "gemini-1.5-flash",
+    model: "gemini-2.0-flash",
     contents: `
 You are the AI concierge for Ivory & Co. Elite Dental Studio.
 
