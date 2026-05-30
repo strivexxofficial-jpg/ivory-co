@@ -113,15 +113,15 @@ async function startServer() {
           },
           body: JSON.stringify({
             prompt:
-              "Bright white clean teeth. Professional teeth whitening. Remove all yellow stains and discoloration. Make teeth visibly white and clean.",
+              "Natural teeth whitening enhancement. Make the teeth brighter, whiter and cleaner while keeping the photo completely realistic and natural. Do not alter face structure, lips, or any other facial features.",
             negativePrompt:
-              "yellow teeth, stained teeth, discolored enamel, dark spots, plaque",
+              "dental equipment, trays, molds, fake teeth, open mouth wide, distortion, artifacts, surreal, cartoon",
             imageUrl: hostedImageUrl,
             width: 1024,
             height: 1024,
             num_steps: 30,
             guidance: 9,
-            strength: 0.75,
+            strength: 0.45,
           }),
         }
       );
