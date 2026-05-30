@@ -1,20 +1,13 @@
 import { GoogleGenAI } from "@google/genai";
 
-export default async function handler(req, res) {
-  try {
-    const ai = new GoogleGenAI({
-      apiKey: process.env.GEMINI_API_KEY || "",
-    });
+export async function generateChatResponse(message: string): Promise<string> {
+  const ai = new GoogleGenAI({
+    apiKey: process.env.GEMINI_API_KEY || "",
+  });
 
-const body =
-  typeof req.body === "string"
-    ? JSON.parse(req.body)
-    : req.body;
-
-const { message } = body;
-    const response = await ai.models.generateContent({
-      model: "gemini-1.5-flash",
-      contents: `
+  const response = await ai.models.generateContent({
+    model: "gemini-1.5-flash",
+    contents: `
 You are the AI concierge for Ivory & Co. Elite Dental Studio.
 
 Rules:
@@ -26,18 +19,7 @@ Rules:
 User:
 ${message}
 `,
-    });
+  });
 
-    res.status(200).json({
-      reply:
-        response.text() ||
-        "Please book a consultation for personalized assistance.",
-    });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      reply: "Something went wrong.",
-    });
-  }
+  return response.text || "Please book a consultation for personalized assistance.";
 }
