@@ -36,7 +36,6 @@
     "react-medium-image-zoom": "^5.4.5",
     "react-router-dom": "^7.14.2",
     "recharts": "^3.8.1",
-    "sharp": "^0.34.5",
     "tailwind-merge": "^3.5.0",
     "vite": "^6.2.0",
     "zod": "^4.3.6"
