@@ -81,7 +81,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-stone text-sage">
+<div className="min-h-screen bg-stone">
       {/* Forced refresh comment */}
 
       {/* Main Nav */}
