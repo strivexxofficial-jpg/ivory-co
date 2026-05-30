@@ -6,8 +6,12 @@ export default async function handler(req, res) {
       apiKey: process.env.GEMINI_API_KEY || "",
     });
 
-    const { message } = req.body;
+const body =
+  typeof req.body === "string"
+    ? JSON.parse(req.body)
+    : req.body;
 
+const { message } = body;
     const response = await ai.models.generateContent({
       model: "gemini-1.5-flash",
       contents: `
@@ -26,7 +30,7 @@ ${message}
 
     res.status(200).json({
       reply:
-        response.text ||
+        response.text() ||
         "Please book a consultation for personalized assistance.",
     });
   } catch (error) {
