@@ -95,7 +95,7 @@ const ConciergeChat = () => {
             </button>
           </div>
 
-          <div className="mb-4 h-[220px] overflow-y-auto rounded-xl bg-black/20 p-3">
+          <div className="mb-4 h-[220px] overflow-y-auto rounded-xl bg-white/5 p-3 text-white">
             {messages.map((msg, index) => (
               <div
                 key={index}
