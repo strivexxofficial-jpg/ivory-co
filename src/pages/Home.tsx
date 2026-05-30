@@ -101,7 +101,7 @@ export default function Home() {
   className="absolute inset-0 z-0 overflow-hidden"
 >
   <img
-    src="https://i.ibb.co/ZppKLXWr/wmremove-transformed.png"
+    src="/hero.png"
     alt="Luxury dental clinic interior"
 className="w-full h-full object-cover object-[78%_center]"
     referrerPolicy="no-referrer"
